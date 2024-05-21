@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Zip Code Markers</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBigGrRZzq18Livy_HYSwbFADZrDQ_spdQ&callback=initMap&v=weekly" defer></script>
+  <script>
+    let map;
+    let geocoder;
+
+    const zipCodes = [
+      '94507', '94027', '94002', '94702', '94703', '94704', '94705', '94707', '94708', '94709',
+      '94710', '94720', '94010', '95008', '94546', '94552', '95013', '95014', '94014', '94015',
+      '94506', '94526', '94568', '94536', '94538', '94539', '94555', '94541', '94542', '94544',
+      '94545', '94550', '94551', '94022', '94024', '95030', '95032', '95033', '94025', '94030',
+      '95035', '95037', '94035', '94040', '94041', '94043', '94560', '94301', '94303', '94304',
+      '94306', '94566', '94588', '94028', '94061', '94062', '94063', '94065', '94066', '94070',
+      '95110', '95111', '95112', '95113', '95116', '95117', '95118', '95119', '95120', '95121',
+      '95122', '95123', '95124', '95125', '95126', '95127', '95128', '95129', '95130', '95131',
+      '95132', '95133', '95134', '95135', '95136', '95138', '95139', '95141', '95148', '95192',
+      '94401', '94402', '94403', '94404', '94582', '94583', '95050', '95051', '95053', '95054',
+      '95070', '94305', '94085', '94086', '94087', '94089', '94587', '94595', '94596', '94597', '94598'
+    ];
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 8,
+        center: {lat: 37.7749, lng: -122.4194},
+        mapTypeId: 'terrain'
+      });
+
+      geocoder = new google.maps.Geocoder();
+      const bounds = new google.maps.LatLngBounds();
+
+      zipCodes.forEach(zip => {
+        geocoder.geocode({ 'address': zip }, (results, status) => {
+          if (status == 'OK') {
+            const latLng = results[0].geometry.location;
+            bounds.extend(latLng);
+            new google.maps.Marker({
+              position: latLng,
+              map: map
+            });
+          } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      });
+
+      map.fitBounds(bounds);
+    }
+
+    window.initMap = initMap;
+  </script>
+  <style>
+    #map {
+      height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="map" style="height: 500px; width: 100%;"></div>
+</body>
+</html>
